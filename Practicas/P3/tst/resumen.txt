@@ -1,0 +1,160 @@
+P = {
+
+programa → declaraciones sentencias
+declaraciones → declaraciones declaracion | declaracion
+declaracion → tipo lista_var ;
+tipo → int | float
+lista_var → lista_var , identificador | identificador
+sentencias → sentencias sentencia | sentencia
+sentencia → identificador = expresion ; | if ( expresion ) sentencias else sentencias | while ( expresión ) sentencias
+expresion → expresion + expresion | expresion - expresion | expresion * expresion | expresion / expresión | identificador | numero
+expresion → ( expresion )
+}
+
+
+declaraciones (ya)
+lista_var  (ya)
+sentencias 
+expresion
+
+
+
+terminales 
+  
+
+
+1) Determinara los conjuntos N , Sumatoria , SimboloInicial
+
+    N = conjunto de no terminales  
+    programa, declaraciones , declaracion ,tipo, lista_var , sentencias , sentencia , expresion
+
+    Suma = Los terminales
+        identificador
+        , 
+        int 
+        float
+        =
+        if
+        (
+        )
+        else
+        while
+        +
+        -
+        *
+        /
+        numero
+    SimboloInicial = programa
+
+2) Eliminación de ambiguedad 
+    La voy a dejar ambiguedad por el momento , la forma de encontrar la ambiguedad podria ser 
+    por hacer la tabla del first , pero me voy a arriesgar 
+
+
+3) eliminacion izquierda 
+
+    P = {
+
+        programa → declaraciones sentencias
+
+        //declaraciones → declaraciones declaracion | declaracion
+        declaraciones →  declaracion declaraciones2
+        declaraciones2 ->  declaracion declaraciones2 | empty 
+        declaracion → tipo lista_var ;
+        tipo → int | float
+
+        //lista_var → lista_var , identificador | identificador
+        lista_var →  identificador lista_var2
+        lista_var2 → , identificador lista_var2 | empty
+
+        //sentencias → sentencias sentencia | sentencia
+        sentencias → sentencia sentencias2
+        sentencias2 → sentencia sentencias2 | empty
+        sentencia → identificador = expresion ; | if ( expresion ) sentencias else sentencias | while ( expresión ) sentencias
+
+        //expresion → expresion + expresion | expresion - expresion | expresion * expresion | expresion / expresión | identificador | numero
+        expresion → identificador expresion2 | numero expresion2
+        expresion2 →  + expresion expresion2 |  - expresion expresion2 |  * expresion expresion2 | / expresión expresion2 | empty
+        expresion → ( expresion )
+    }
+
+
+4) factorización izquierda
+
+    (No es necesaria hacerla porque entre los no terminales su posibles producciones no tienen cosas en comun  )
+    P = {
+
+        programa → declaraciones sentencias
+        declaraciones →  declaracion declaraciones2
+        declaraciones2 ->  declaracion declaraciones2 | empty 
+        declaracion → tipo lista_var ;
+        tipo → int | float
+
+        lista_var →  identificador lista_var2
+        lista_var2 → , identificador lista_var2 | empty
+
+        sentencias → sentencia sentencias2
+        sentencias2 → sentencia sentencias2 | empty
+        sentencia → identificador = expresion ; | if ( expresion ) sentencias else sentencias | while ( expresión ) sentencias
+
+        expresion → identificador expresion2 | numero expresion2 | ( expresion ) expresion2
+        expresion2 →  + expresion expresion2 |  - expresion expresion2 |  * expresion expresion2 | / expresión expresion2 | empty
+        
+    }
+
+
+Para quitar ambiguedad 
+
+    P = {
+
+        programa → declaraciones sentencias
+        declaraciones →  declaracion declaraciones2
+        declaraciones2 ->  declaracion declaraciones2 | empty 
+        declaracion → tipo lista_var ;
+        tipo → int | float
+
+        lista_var →  identificador lista_var2
+        lista_var2 → , identificador lista_var2 | parteSentencia |empty
+
+        parteSentencia → = expresion        // sin coma porque esa ya la tiene la declaracion
+
+        sentencias → sentencia sentencias2
+        sentencias2 → sentencia sentencias2 | empty
+        sentencia → identificador = expresion ; | if ( expresion ) sentencias else sentencias | while ( expresión ) sentencias
+
+        expresion → identificador expresion2 | numero expresion2 | ( expresion ) expresion2
+        expresion2 →  + expresion expresion2 |  - expresion expresion2 |  * expresion expresion2 | / expresión expresion2 | empty
+        
+    }
+
+
+
+
+
+
+
+5 , La  5 sale de la 4 
+
+
+6  Las clases lexicas en ves de enum 
+
+
+
+
+PENDIENTE : 
+Punto8 : crear otra version del programa usando token 
+Poner mas ejercicios
+Pensar en la gramatica que tiene 
+
+crear la rama (mia)
+copiar los archivos
+subir
+
+
+
+Codigos para ejecutarlos : 
+jflex src/main/jflex/Lexer.flex
+
+//nadamas tuve que modificar este de "...src/jflex/Main.."  a "...src/java/Main..." 
+javac --source-path src -d build src/main/java/Main.java   
+java -cp build main.java.Main tst/prueba.txt   
