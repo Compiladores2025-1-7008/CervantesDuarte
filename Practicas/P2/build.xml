@@ -1,0 +1,28 @@
+<?xml version ="1.0" encoding ="UTF8"?>
+<project name = "compilador"  default="compile" basedir=".">
+    <target name ="compile" description="Compila el codigo java">
+        <exec executable="jflex" failonerror="true">
+            <arg value="src/main/jflex/Lexer.flex"/>
+        </exec>
+            <mkdir dir="build"/>
+                <javac srcdir="src" destdir="build" includeantruntime="false">
+                    <include name="main/jflex/Lexer.java"/>
+                </javac>
+</target>
+
+
+
+
+<target name ="run" depends="compile" description="ejecuta el programa ">
+    <java classname="main.jflex.Lexer" fork="true" failonerror="true">
+        <classpath>
+            <pathelement path="build"/>
+        </classpath>
+        <arg value="input.txt"/>
+    </java>
+
+</target>
+<target name ="clean" description="borra los archivos.class">
+    <delete dir="build"/>
+</target>
+</project>
